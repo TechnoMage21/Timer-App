@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Playwrite+BE+VLG:wght@100..400&display=swap");
+
+body {
+  background: linear-gradient(60deg, #2a0956, #4465a4);
+  background-repeat: no-repeat;
+  height: 100vh;
+}
+.App {
+  text-align: center;
+}
+.timer {
+  background: linear-gradient(60deg, #2a0956, #4465a4);
+  margin: 12px 29px 12px 29px;
+  padding: 20px;
+  border: none;
+  box-shadow: inset 6px 5px 14px 0px #434b83;
+}
+
+.timer-show {
+  margin: 6px;
+  padding: 20px;
+  color: linen;
+  font-family: cursive;
+}
+.button-div {
+  display: flex;
+  justify-content: space-evenly;
+}
+.select-time {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20vh;
+  /* width: 100%; */
+
+  margin: 39px;
+  border-radius: 20px;
+  box-shadow: 13px 13px 11px gr;
+}
+select {
+  word-wrap: normal;
+  background: #00000057;
+  height: 8vh;
+  width: 18%;
+  margin: 20px !important;
+  border: none;
+  color: white;
+  padding: 9px;
+}
+select:focus {
+  background: black;
+  color: wheat;
+  border: none;
+}
+.tick h2 {
+  font-size: 3em !important;
+  font-weight: bold;
+  background: linear-gradient(45deg, #d1cdda, #b5d3a8, #14b47e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  border: 2px solid transparent;
+  padding: 10px;
+  display: inline-block;
+}
+@media (max-width: 420px) {
+  select {
+    padding: 0px;
+    width: 20%;
+    margin: 14px !important;
+  }
+}
+@media (max-width: 378px) {
+  select {
+    padding: 1px;
+    margin: 6px !important;
+    width: 25%;
+  }
+}
+@media (max-width: 375px) {
+  .select-time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40vh;
+    font-size: 13px;
+  }
+}
+@media (max-width: 276px) {
+  .style-card h6 {
+    font-size: 10px !important;
+  }
+  select {
+    height: 8vh;
+    font-size: 13px;
+  }
+  .select-time {
+    margin: 0;
+    width: 100%;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
