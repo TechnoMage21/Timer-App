@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import StopIcon from '@mui/icons-material/Stop';
-// import "react-simple-typewriter/dist/index.css";
+import StopIcon from "@mui/icons-material/Stop";
 import { Typewriter } from "react-simple-typewriter";
 
 export default function Timer() {
@@ -10,66 +9,80 @@ export default function Timer() {
     minute: 0,
     seconds: 0,
   });
-  const [hour, setHour] = useState(0);
-  const [minute, setMinute] = useState(0);
-  const [second, setSecond] = useState(0);
+
+  const [currentTime, setCurrentTime] = useState({
+    hour: 0,
+    minute: 0,
+    seconds: 0,
+  });
+
   const [isTimerRunning, setRunning] = useState(false);
 
+  // Handles input changes for hours, minutes, and seconds
   const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name + value);
-    setTimer({ ...timer, [name]: value });
+    setTimer((prev) => ({
+      ...prev,
+      [name]: parseInt(value, 10) || 0,
+    }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setHour(timer.hour);
-    setMinute(timer.minute);
-    setSecond(timer.seconds);
+  // Starts the timer
+  const handleStart = () => {
+    const { hour, minute, seconds } = timer;
+    if (hour === 0 && minute === 0 && seconds === 0) {
+      alert("Please set a valid timer duration.");
+      return;
+    }
+    setCurrentTime(timer);
     setRunning(true);
     setTimer({ hour: 0, minute: 0, seconds: 0 });
-    console.log(timer.hour + timer.minute + timer.seconds);
   };
-const handleStop = (e)=>{
-  e.preventDefault();
-  setRunning(false);
-  setHour(0);
-  setMinute(0);
-  setSecond(0);
-}
+
+  // Stops the timer
+  const handleStop = () => {
+    setRunning(false);
+    setCurrentTime({ hour: 0, minute: 0, seconds: 0 });
+  };
+
+  // Timer countdown logic
   useEffect(() => {
     let timerInterval;
+
     if (isTimerRunning) {
       timerInterval = setInterval(() => {
-        if (hour === 0 && minute === 0 && second === 0) {
-          clearInterval(timerInterval);
-          alert("Time's up!");
-          setRunning(false);
-        } else if (second > 0) {
-          setSecond((prevSecond) => prevSecond - 1);
-        } else if (minute > 0) {
-          setMinute((prevMinute) => prevMinute - 1);
-          setSecond(59);
-        } else if (hour > 0) {
-          setHour((prevHour) => prevHour - 1);
-          setMinute(59);
-          setSecond(59);
-        }
+        setCurrentTime(({ hour, minute, seconds }) => {
+          if (hour === 0 && minute === 0 && seconds === 0) {
+            clearInterval(timerInterval);
+            setRunning(false);
+            alert("Time's up!");
+            return { hour: 0, minute: 0, seconds: 0 };
+          }
+
+          if (seconds > 0) {
+            return { hour, minute, seconds: seconds - 1 };
+          } else if (minute > 0) {
+            return { hour, minute: minute - 1, seconds: 59 };
+          } else if (hour > 0) {
+            return { hour: hour - 1, minute: 59, seconds: 59 };
+          }
+        });
       }, 1000);
     }
 
-    return () => clearInterval(timerInterval); // Clear interval on component unmount or when dependencies change
-  }, [isTimerRunning, hour, minute, second]);
+    return () => clearInterval(timerInterval);
+  }, [isTimerRunning]);
 
-  const displayHour = String(hour).padStart(2, "0");
-  const displayMinute = String(minute).padStart(2, "0");
-  const displaySecond = String(second).padStart(2, "0");
+  // Helper to format time values with leading zeroes
+  const formatTime = (value) => String(value).padStart(2, "0");
+
   return (
     <>
       <div className="tick">
-        <h2>{isTimerRunning ?(
+        <h2>
+          {isTimerRunning ? (
             <Typewriter
-              words={["Timer is Going"]}
+              words={["Timer is Running"]}
               loop={false}
               cursor
               cursorStyle="_"
@@ -78,57 +91,56 @@ const handleStop = (e)=>{
               delaySpeed={1000}
             />
           ) : (
-              "Start Timer"
-          )}</h2>
+            "Set Timer"
+          )}
+        </h2>
       </div>
+
       <div className="timer">
+        {/* Time Selection */}
         <div className="select-time">
-          <select name="hour" id="" onChange={handleChange} value={timer.hour}>
+          <select name="hour" onChange={handleChange} value={timer.hour}>
             {Array.from({ length: 24 }, (_, i) => (
               <option key={i} value={i}>
-                {i >= 10 ? i : "0" + i}
+                {formatTime(i)}
               </option>
             ))}
           </select>
-          <select
-            name="minute"
-            id=""
-            onChange={handleChange}
-            value={timer.minute}
-          >
+          <select name="minute" onChange={handleChange} value={timer.minute}>
             {Array.from({ length: 60 }, (_, i) => (
               <option key={i} value={i}>
-                {i >= 10 ? i : "0" + i}
+                {formatTime(i)}
               </option>
             ))}
           </select>
-          <select
-            name="seconds"
-            id=""
-            onChange={handleChange}
-            value={timer.seconds}
-          >
+          <select name="seconds" onChange={handleChange} value={timer.seconds}>
             {Array.from({ length: 60 }, (_, i) => (
               <option key={i} value={i}>
-                {i >= 10 ? i : "0" + i}
+                {formatTime(i)}
               </option>
             ))}
           </select>
         </div>
+
+        {/* Timer Display */}
         <div className="timer-show">
           <h2>
-            {displayHour}:{displayMinute}:{displaySecond}
+            {formatTime(currentTime.hour)}:{formatTime(currentTime.minute)}:
+            {formatTime(currentTime.seconds)}
           </h2>
         </div>
-      
-      <div className="button-div">
-        <button className="btn btn-success" onClick={handleSubmit}>
-          <PlayArrowIcon />
-        </button>
-        {isTimerRunning ? <button className="btn btn-success" onClick={handleStop}>
-          <StopIcon />
-        </button>:''}
-      </div>
+
+        {/* Control Buttons */}
+        <div className="button-div">
+          <button className="btn btn-success" onClick={handleStart}>
+            <PlayArrowIcon />
+          </button>
+          {isTimerRunning && (
+            <button className="btn btn-danger" onClick={handleStop}>
+              <StopIcon />
+            </button>
+          )}
+        </div>
       </div>
     </>
   );
